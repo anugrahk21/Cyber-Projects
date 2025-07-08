@@ -198,8 +198,8 @@ class PasswordTool:
         # 'breach_count': 0 (for now)
         # 'message': "Breach check not implemented yet"
 
-        breached_passwords = [sha1_hash[:5] ,sha1_hash[5:]]
-        check_string = str(sha1_hash[:5])
+        breached_passwords = [sha1_hash[:4] ,sha1_hash[5:]]
+        check_string = sha1_hash[:4]
         #simulated API response
         if check_string in breached_passwords:
             return {
@@ -213,8 +213,6 @@ class PasswordTool:
                 'breach_count': 0,
                 'message': "Password not found in breaches"
             }
-            
-        return {}
 
 def main():
     """Main function to run the password tool"""
@@ -263,7 +261,7 @@ def main():
             password = input("Enter password to check for breaches: ")
             result = tool.check_password_breach(password)
             if result['is_breached']:
-                print(f"Password found in breaches! Count: {result['breach_count']}")
+                print(f"{result['message']} {result['breach_count']}")
             else:
                 print("Password not found in breaches.")
         
