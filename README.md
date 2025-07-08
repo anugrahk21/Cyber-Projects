@@ -1,8 +1,8 @@
 # 🛡️ Cyber-Projects
 
-> *A comprehensive collection of cybersecurity tools and educational projects* 🔐
+> *A comprehensive collection of My cybersecurity tools and educational projects* 🔐
 
-Welcome to my cybersecurity learning journey! This repository contains hands-on projects that explore various aspects of information security, from password analysis to advanced threat detection.
+Welcome to my cybersecurity learning journey! This repository contains My hands-on projects that explore various aspects of information security, from password analysis to advanced threat detection.
 
 ---
 
