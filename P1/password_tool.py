@@ -2,7 +2,8 @@ import re # Regular expressions for pattern matching
 import random # Random for generating random characters
 import string # String module for character sets
 import secrets # Secure random number generator
-import hashlib # For hashing passwords to check against breaches
+import hashlib # For hashing passwords to check against breaches(but here we are not using it)
+import math # For calculating entropy
 
 class PasswordTool:
     def __init__(self):
@@ -92,7 +93,6 @@ class PasswordTool:
         # Where character_set_size depends on what types are used:
         # lowercase: 26, uppercase: 26, digits: 10, special: 32
         
-        import math
         char_set_size = 0
         if has_lower:
             char_set_size += 26
@@ -160,6 +160,10 @@ class PasswordTool:
         
         # Complete password generation
         # Ensure at least one character from each required category:
+
+        #We use secrets.choice for cryptographic security
+        # This ensures that the password is generated using a secure random number generator
+
         # 1. Add one random lowercase letter
         password.append(secrets.choice(lowercase))
         # 2. Add one random uppercase letter
@@ -185,8 +189,7 @@ class PasswordTool:
         """
         # Create SHA-1 hash of password
         sha1_hash = password
-        
-        # TODO: Complete this section
+
         # In a real implementation, you would:
         # 1. Take first 5 characters of the hash
         # 2. Query HaveIBeenPwned API with these 5 chars
@@ -198,7 +201,7 @@ class PasswordTool:
         # 'breach_count': 0 (for now)
         # 'message': "Breach check not implemented yet"
 
-        breached_passwords = [sha1_hash[:4] ,sha1_hash[5:]]
+        breached_passwords = ["abc" ,sha1_hash[5:], "def", sha1_hash[4:5], "1234", "5678"] #demo 
         check_string = sha1_hash[:4]
         #simulated API response
         if check_string in breached_passwords:
@@ -219,7 +222,8 @@ def main():
     tool = PasswordTool()
     
     while True:
-        print("\n=== Password Security Tool ===")
+        print("\n============= Password Security Tool =============")
+        print("=== Made by Anugrah K (github.com/anugrahk21) ===")
         print("1. Check password strength")
         print("2. Generate secure password")
         print("3. Check password breach status")
@@ -243,10 +247,9 @@ def main():
         
         elif choice == '2':
             try:
-                length = int(input("Password length (default 12): ") or "12")
-                include_symbols = input("Include symbols? (y/n, default y): ").lower() != 'n'
-                exclude_ambiguous = input("Exclude ambiguous chars? (y/n, default y): ").lower() != 'n'
-                
+                length = int(input("Password length (default 12): ") or "12") # Default to 12 if no input
+                include_symbols = input("Include symbols? (y/n, default y): ").lower() != 'n' # Default to True, but False if user inputs 'n'
+                exclude_ambiguous = input("Exclude ambiguous chars? (y/n, default y): ").lower() != 'n' # Default to True, but False if user inputs 'n'
                 password = tool.generate_password(length, include_symbols, exclude_ambiguous)
                 print(f"\nGenerated password: {password}")
                 
@@ -260,10 +263,7 @@ def main():
         elif choice == '3':
             password = input("Enter password to check for breaches: ")
             result = tool.check_password_breach(password)
-            if result['is_breached']:
-                print(f"{result['message']} {result['breach_count']}")
-            else:
-                print("Password not found in breaches.")
+            print(f"{result['message']}, Count: {result['breach_count']}")
         
         elif choice == '4':
             print("Thanks for using Password Security Tool!")
