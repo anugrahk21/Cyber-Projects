@@ -1,13 +1,19 @@
-# 🔐 Password Security Tool
+# 🔐 VaultGuard: Password Security Tool
 
 > *Your personal cybersecurity guardian for creating and analyzing passwords!* 🛡️
 
-A comprehensive Python-based password strength analyzer and secure password generator designed for cybersecurity learning and real-world application.
+A comprehensive Python-based password strength analyzer, secure password generator, and a **Premium React Web Application** designed for cybersecurity learning and real-world application.
 
 ---
 
 ## ✨ Features
 
+### 💻 Web Interface (VaultGuard)
+- **Modern Full-Stack Architecture**: Built with Vite + React for the frontend and Python FastAPI for the backend.
+- **Premium UI/UX**: Features a sleek glassmorphism design, dark/light mode toggle, and smooth animations using Vanilla CSS.
+- **Vercel Ready**: Pre-configured to deploy effortlessly to Vercel using Python Serverless Functions.
+
+### 🧠 Core Engine Features
 🎯 **Password Strength Analyzer**
 - Smart scoring system (0-100 points)
 - Real-time feedback and recommendations
@@ -29,20 +35,53 @@ A comprehensive Python-based password strength analyzer and secure password gene
 
 ## 🚀 Quick Start
 
+You can use this tool in two ways: via the **Command Line** or the **Web Interface**.
+
+### Option A: Command Line Interface
 ```bash
 cd P1
 python password_tool.py
 ```
-
 **Requirements:** Python 3.6+ (no external dependencies needed!)
+
+### Option B: Web Interface (Local Development)
+You will need to run both the React frontend and the Python backend simultaneously.
+
+**1. Start the React Frontend:**
+```bash
+cd P1/frontend
+npm install
+npm run dev
+```
+
+**2. Start the Python Backend:**
+Open a *second* terminal window:
+```bash
+cd P1/frontend
+pip install -r requirements.txt
+pip install uvicorn
+uvicorn api.index:app --reload --port 8000
+```
+*(The React app automatically proxies API requests to port 8000!)*
 
 ---
 
-## 🎮 How to Use
+## ☁️ Deploying to Vercel
 
-When you run the tool, you'll see this interactive menu:
+This project is pre-configured for Vercel deployment!
+1. Push this repository to GitHub.
+2. Log into Vercel and import your repository.
+3. In the project settings, set the **Root Directory** to `frontend`.
+4. Vercel will automatically build the Vite app and deploy the `api/` folder as Python Serverless Functions.
+5. Click **Deploy**.
 
-```
+---
+
+## 🎮 How to Use (CLI)
+
+When you run the terminal tool, you'll see this interactive menu:
+
+```text
 ============= Password Security Tool =============
 === Made by Anugrah K (github.com/anugrahk21) ===
 1. Check password strength
@@ -51,48 +90,11 @@ When you run the tool, you'll see this interactive menu:
 4. Exit
 ```
 
-### 1️⃣ Password Strength Checker
-
-Enter any password and get:
-- **Strength Rating**: Very Weak → Very Strong
-- **Numerical Score**: 0-100 points
-- **Entropy Value**: Bits of randomness
-- **Smart Recommendations**: Personalized improvement tips
-
-**Scoring System:**
-- 📏 **Length Points**: Up to 25 points (12+ chars = max points)
-- 🎨 **Character Variety**: 15-20 points per type (lower, UPPER, 123, !@#)
-- 🏆 **Variety Bonus**: +10 points for using all character types
-- 🧠 **Entropy Bonus**: +10 points for high randomness (60+ bits)
-- ⚠️ **Penalties**: -40 for common passwords, -20 for weak patterns
-
-### 2️⃣ Secure Password Generator
-
-Create bulletproof passwords with options:
-- **Custom Length**: Default 12, recommend 16+ for high security
-- **Symbol Inclusion**: Special characters for extra strength
-- **Ambiguous Filtering**: Removes confusing chars (0,O,l,1,I)
-
-**Security Features:**
-- Uses `secrets.SystemRandom()` for cryptographic randomness
-- Guarantees at least one character from each selected type
-- Final shuffle for unpredictable character placement
-
-### 3️⃣ Breach Check (Pwned Passwords API)
-
-**✅ Real breach data with privacy protection**
-
-**How It Works:**
-1. Hash the password with SHA-1 locally
-2. Send only the first 5 hash characters to the API
-3. Compare the returned suffixes locally to find a match
-4. Never send the actual password over the internet
-
 ---
 
 ## 🧪 Test Cases
 
-Try these passwords to see the tool in action:
+Try these passwords to see the tool in action (works on both Web and CLI):
 
 | Password | Expected Strength | Why? |
 |----------|------------------|------|
@@ -129,12 +131,14 @@ Try these passwords to see the tool in action:
 
 ## 🛠️ Code Architecture
 
-```
-PasswordTool Class
-├── __init__()           # Initialize weak password & pattern lists
-├── check_password_strength()  # Main analysis engine
-├── generate_password()       # Secure password creation
-└── check_password_breach()   # Demo breach simulation
+```text
+P1/
+├── password_tool.py          # Standalone CLI tool
+└── frontend/                 # React Web Application
+    ├── api/                  # Python Backend (Vercel Serverless)
+    │   ├── index.py          # FastAPI Server
+    │   └── password_tool.py  # Core Engine Module
+    └── src/                  # React Source Code
 ```
 
 **Key Technologies:**
@@ -142,36 +146,16 @@ PasswordTool Class
 - `secrets` module for cryptographic randomness
 - `string` module for character set definitions
 - `math` module for entropy calculations
-- `hashlib` module for hashing passwords (not used in demo)
 
 ---
 
 ## 🎯 Future Enhancement Ideas
 
-1. **🌐 Real API Integration**: Connect to actual HaveIBeenPwned API
-2. **📚 Dictionary Detection**: Check against common word lists
-3. **📊 Visual Strength Meter**: GUI with real-time strength visualization
+1. **⏱️ Crack Time Estimation**: Show estimated time to break password
+2. **🔗 Passphrase Generator**: Create memorable word-based passwords
+3. **⚡ Live Strength Meter**: UI updates instantly on every keystroke
 4. **🔄 Password History**: Prevent password reuse
-5. **🎨 Custom Character Sets**: User-defined character pools
-6. **⏱️ Crack Time Estimation**: Show estimated time to break password
-7. **🔗 Passphrase Generator**: Create memorable word-based passwords
-
----
-
-## 🎓 Educational Value
-
-This tool demonstrates core cybersecurity concepts:
-- **Password Entropy & Randomness**
-- **Secure Random Number Generation**
-- **Pattern Recognition & Analysis**
-- **API Design Patterns (breach checking)**
-- **User Experience in Security Tools**
-
-Perfect for students learning about:
-- Cryptographic security principles
-- Python security programming
-- Password policy development
-- Security tool design
+5. **📚 Dictionary Detection**: Check against common word lists
 
 ---
 
