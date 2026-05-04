@@ -33,13 +33,13 @@ export default function Home() {
         gap: '2rem'
       }}>
         {projects.map((project) => (
-          <Link 
-            key={project.id} 
+          <Link
+            key={project.id}
             to={project.path}
             className="glass-panel"
-            style={{ 
-              textDecoration: 'none', 
-              display: 'flex', 
+            style={{
+              textDecoration: 'none',
+              display: 'flex',
               flexDirection: 'column',
               transition: 'all 0.3s ease',
               cursor: 'pointer'
@@ -54,7 +54,7 @@ export default function Home() {
             <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', flexGrow: 1 }}>
               {project.description}
             </p>
-            
+
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.5rem' }}>
               {project.tags.map(tag => (
                 <span key={tag} className="badge badge-success" style={{ fontSize: '0.75rem' }}>
@@ -63,14 +63,14 @@ export default function Home() {
               ))}
             </div>
 
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
               color: 'var(--accent-primary)',
               fontWeight: 600,
               fontSize: '0.875rem'
             }}>
-              Launch Project <ArrowRight className="ml-2 w-4 h-4" style={{ marginLeft: '0.5rem' }}/>
+              Launch Project <ArrowRight className="ml-2 w-4 h-4" style={{ marginLeft: '0.5rem' }} />
             </div>
           </Link>
         ))}
