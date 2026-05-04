@@ -20,10 +20,10 @@ A comprehensive Python-based password strength analyzer and secure password gene
 - Automatic ambiguous character filtering (no more 0/O confusion!)
 - Guaranteed character variety enforcement
 
-🚨 **Breach Detection (Demo)**
-- Simulated breach checking system
-- Educational demonstration of HaveIBeenPwned-style functionality
-- Pattern-based detection for learning purposes
+🚨 **Breach Detection (Pwned Passwords API)**
+- Real breach checking using the free Pwned Passwords k-anonymity API
+- Only the first 5 SHA-1 hash chars are sent (privacy-preserving)
+- No API key required
 
 ---
 
@@ -78,22 +78,15 @@ Create bulletproof passwords with options:
 - Guarantees at least one character from each selected type
 - Final shuffle for unpredictable character placement
 
-### 3️⃣ Breach Check (Demo/Educational)
+### 3️⃣ Breach Check (Pwned Passwords API)
 
-**🎓 Learning Feature - Not Real Breach Data!**
+**✅ Real breach data with privacy protection**
 
-This simulates how real breach checking works:
-
-**How Our Demo Works:**
-1. Takes first 4 characters of your password as "hash prefix"
-2. Checks against demo breach database: `["abc", "def", "1234", "5678"]`
-3. Returns simulated breach status and count
-
-**Real-World Implementation Would:**
-1. Hash password with SHA-1
-2. Send first 5 chars to HaveIBeenPwned API
-3. Check if remaining hash appears in response
-4. Never send actual password over internet!
+**How It Works:**
+1. Hash the password with SHA-1 locally
+2. Send only the first 5 hash characters to the API
+3. Compare the returned suffixes locally to find a match
+4. Never send the actual password over the internet
 
 ---
 

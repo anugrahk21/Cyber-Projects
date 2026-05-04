@@ -183,38 +183,63 @@ class PasswordTool:
 
     def check_password_breach(self, password):
         """
-        Check if password appears in known breaches using SHA-1 hash
-        (This is a simplified version - in real implementation, 
-         you'd use HaveIBeenPwned API)
+        Check if password appears in known breaches using the
+        Pwned Passwords k-anonymity API (no API key required).
         """
-        # Create SHA-1 hash of password
-        sha1_hash = password
+        import urllib.request
+        import urllib.error
 
-        # In a real implementation, you would:
-        # 1. Take first 5 characters of the hash
-        # 2. Query HaveIBeenPwned API with these 5 chars
-        # 3. Check if remaining hash appears in response
-        # For now, just return a mock response
-        
-        # YOUR CODE HERE - Return a dictionary with:
-        # 'is_breached': False (for now)
-        # 'breach_count': 0 (for now)
-        # 'message': "Breach check not implemented yet"
-
-        breached_passwords = ["abc" ,sha1_hash[5:], "def", sha1_hash[4:5], "1234", "5678"] #demo 
-        check_string = sha1_hash[:4]
-        #simulated API response
-        if check_string in breached_passwords:
+        if not password:
             return {
-                'is_breached': True,
-                'breach_count': breached_passwords.count(check_string),
-                'message': "Password found in breaches"
+                'is_breached': False,
+                'breach_count': 0,
+                'message': "Empty password provided"
             }
-        else:
+
+        # Hash the password and use the first 5 chars for k-anonymity
+        sha1_hash = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
+        prefix = sha1_hash[:5]
+        suffix = sha1_hash[5:]
+
+        url = f"https://api.pwnedpasswords.com/range/{prefix}"
+        headers = {
+            "User-Agent": "PasswordSecurityTool",
+            "Add-Padding": "true"
+        }
+
+        try:
+            request = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(request, timeout=10) as response:
+                data = response.read().decode('utf-8')
+
+            for line in data.splitlines():
+                try:
+                    hash_suffix, count = line.split(':')
+                except ValueError:
+                    continue
+                if hash_suffix == suffix:
+                    return {
+                        'is_breached': True,
+                        'breach_count': int(count),
+                        'message': "Password found in breaches"
+                    }
+
             return {
                 'is_breached': False,
                 'breach_count': 0,
                 'message': "Password not found in breaches"
+            }
+        except urllib.error.URLError:
+            if password.lower() in self.weak_passwords:
+                return {
+                    'is_breached': True,
+                    'breach_count': 0,
+                    'message': "Offline fallback: common password match"
+                }
+            return {
+                'is_breached': False,
+                'breach_count': 0,
+                'message': "Breach check unavailable (network error)"
             }
 
 def main():
