@@ -15,10 +15,18 @@ export default function VaultGuard() {
   const [genResult, setGenResult] = useState(null)
   const [isLoadingGen, setIsLoadingGen] = useState(false)
 
-  // States for Breach
   const [breachPassword, setBreachPassword] = useState('')
   const [breachResult, setBreachResult] = useState(null)
   const [isLoadingBreach, setIsLoadingBreach] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = () => {
+    if (genResult && genResult.password) {
+      navigator.clipboard.writeText(genResult.password)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
 
   // --- API Calls ---
 
@@ -81,6 +89,7 @@ export default function VaultGuard() {
 
   // --- Helpers ---
   const getBadgeClass = (strength) => {
+    if (strength === 'COMPROMISED') return 'badge-danger'
     if (['Very Strong', 'Strong'].includes(strength)) return 'badge-success'
     if (['Medium'].includes(strength)) return 'badge-warning'
     return 'badge-danger'
@@ -133,9 +142,9 @@ export default function VaultGuard() {
               </form>
 
               {checkResult && (
-                <div className="result-box animate-fade-in">
+                <div className={`result-box animate-fade-in ${checkResult.strength === 'COMPROMISED' ? 'border-danger' : ''}`}>
                   <div className="flex justify-between items-center mb-2">
-                    <h3 style={{ marginBottom: 0 }}>Analysis Result</h3>
+                    <h3 style={{ marginBottom: 0, color: checkResult.strength === 'COMPROMISED' ? 'var(--danger)' : 'inherit' }}>Analysis Result</h3>
                     <span className={`badge ${getBadgeClass(checkResult.strength)}`}>
                       {checkResult.strength}
                     </span>
@@ -208,7 +217,12 @@ export default function VaultGuard() {
 
               {genResult && (
                 <div className="result-box animate-fade-in text-center">
-                  <h4 className="mb-2">Your Secure Password</h4>
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 style={{ marginBottom: 0 }}>Your Secure Password</h4>
+                    {genResult.breach_data && !genResult.breach_data.is_breached && (
+                       <span className="badge badge-success" style={{ fontSize: '0.75rem' }}>✅ Verified Safe</span>
+                    )}
+                  </div>
                   <div style={{
                     padding: '1rem',
                     background: 'var(--bg-primary)',
@@ -217,9 +231,15 @@ export default function VaultGuard() {
                     fontSize: '1.5rem',
                     wordBreak: 'break-all',
                     border: '1px solid var(--border-color)',
-                    marginBottom: '1rem'
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
                   }}>
-                    {genResult.password}
+                    <span>{genResult.password}</span>
+                    <button type="button" onClick={handleCopy} className="btn btn-secondary" style={{ padding: '0.25rem 0.5rem', fontSize: '0.875rem' }}>
+                      {copied ? 'Copied!' : 'Copy'}
+                    </button>
                   </div>
                   <div className="flex justify-between items-center" style={{ maxWidth: '300px', margin: '0 auto' }}>
                     <span className={`badge ${getBadgeClass(genResult.analysis.strength)}`}>
@@ -262,9 +282,14 @@ export default function VaultGuard() {
                     {breachResult.message}
                   </h3>
                   {breachResult.is_breached && (
-                    <p style={{ marginTop: '0.5rem', fontWeight: 500 }}>
-                      Seen {breachResult.breach_count.toLocaleString()} times in known data breaches.
-                    </p>
+                    <>
+                      <p style={{ marginTop: '0.5rem', fontWeight: 500 }}>
+                        Seen {breachResult.breach_count.toLocaleString()} times in known data breaches.
+                      </p>
+                      <p style={{ marginTop: '0.5rem', color: 'var(--danger)', fontWeight: 700 }}>
+                        🚨 CHANGE THIS PASSWORD IMMEDIATELY IF USED ANYWHERE!
+                      </p>
+                    </>
                   )}
                   {!breachResult.is_breached && (
                     <p style={{ marginTop: '0.5rem' }}>

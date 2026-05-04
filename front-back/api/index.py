@@ -26,17 +26,41 @@ class PasswordGenerateRequest(BaseModel):
 
 @app.post("/api/check-strength")
 async def check_strength(req: PasswordCheckRequest):
-    return tool.check_password_strength(req.password)
+    result = tool.check_password_strength(req.password)
+    breach = tool.check_password_breach(req.password)
+    
+    if breach.get('is_breached'):
+        result['score'] = 0
+        result['strength'] = "COMPROMISED"
+        result['feedback'].insert(0, "🚨 CRITICAL: This password has been found in a data breach! Change it immediately if used anywhere.")
+        
+    return {
+        **result,
+        "breach_data": breach
+    }
 
 @app.post("/api/generate")
 async def generate(req: PasswordGenerateRequest):
-    pwd = tool.generate_password(
-        length=req.length,
-        include_symbols=req.include_symbols,
-        exclude_ambiguous=req.exclude_ambiguous
-    )
+    pwd = ""
+    breach = None
+    
+    # Try up to 3 times to find a non-breached password
+    for _ in range(3):
+        pwd = tool.generate_password(
+            length=req.length,
+            include_symbols=req.include_symbols,
+            exclude_ambiguous=req.exclude_ambiguous
+        )
+        breach = tool.check_password_breach(pwd)
+        if not breach.get('is_breached'):
+            break
+            
     result = tool.check_password_strength(pwd)
-    return {"password": pwd, "analysis": result}
+    return {
+        "password": pwd, 
+        "analysis": result,
+        "breach_data": breach
+    }
 
 @app.post("/api/check-breach")
 async def check_breach(req: PasswordCheckRequest):
