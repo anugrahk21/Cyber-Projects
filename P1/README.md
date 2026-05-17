@@ -33,6 +33,15 @@ A comprehensive Python-based password strength analyzer, secure password generat
 
 ---
 
+## 📌 CV-Ready Skills (Based on Implementation)
+
+- **Password Security Analysis Engineering (Python):** Built a rule-based strength engine with regex-driven weak-pattern detection, entropy scoring (`length × log₂(charset)`), and actionable security feedback.
+- **Secure Password Generation:** Implemented cryptographically secure password generation using Python `secrets`/`SystemRandom`, with configurable policies (length, symbols, ambiguous-character exclusion) and enforced character diversity.
+- **Privacy-Preserving Breach Detection:** Integrated Have I Been Pwned k-anonymity checks using SHA-1 prefix range queries so plaintext passwords are never transmitted, with resilient offline fallback handling.
+- **Full-Stack Security Tool Development:** Delivered a React (Vite) frontend + FastAPI backend with Pydantic request models and serverless deployment structure (Vercel), connecting secure backend logic to a production-style web UI.
+
+---
+
 ## 🚀 Quick Start
 
 You can use this tool in two ways: via the **Command Line** or the **Web Interface**.
